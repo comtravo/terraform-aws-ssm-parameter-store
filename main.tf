@@ -1,15 +1,14 @@
 variable "parameter" {
-  type = "string"
+  type        = "string"
   description = "parameter for which the ARN needs to be fetched"
 }
-
 
 locals {
   prefix = "${upper(terraform.workspace)}_"
 }
 
 data "aws_ssm_parameter" "parameter" {
-  name = "${local.prefix}${var.parameter}"
+  name            = "${local.prefix}${var.parameter}"
   with_decryption = false
 }
 
