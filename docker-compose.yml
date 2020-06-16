@@ -13,7 +13,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=bar
       - LOCALSTACK_HOST=localstack
     depends_on:
-      - localstack
+      - start_dependencies
 
   localstack:
     image: localstack/localstack
@@ -30,6 +30,12 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "localstack-data:/tmp/localstack"
+
+  start_dependencies:
+    image: puneethn/wait-for-dependencies
+    depends_on:
+      - localstack
+    command: localstack:4583
 
 volumes:
   localstack-data:
