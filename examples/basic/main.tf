@@ -1,3 +1,8 @@
+variable "secret_name" {
+  type = string
+  description = "Secret's ARN to fetch"
+}
+
 provider "aws" {
   s3_force_path_style         = true
   skip_credentials_validation = true
@@ -13,8 +18,12 @@ provider "aws" {
   }
 }
 
-module "fetch_FOO_arn" {
-  source = "../"
+module "fetch_secret_arn" {
+  source = "../../"
 
-  parameter = "FOO"
+  parameter = var.secret_name
+}
+
+output "arn" {
+  value       = module.fetch_secret_arn.arn
 }
