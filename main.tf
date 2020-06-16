@@ -19,13 +19,19 @@
 
 variable "parameter" {
   type        = string
-  description = "parameter for which the ARN needs to be fetched"
+  description = "SSM parameter for which the ARN needs to be fetched"
 }
 
 variable "prefix" {
   type        = string
-  description = "parameter for which the ARN needs to be fetched"
-  default = null
+  description = "SSM parameter prefix"
+  default     = null
+}
+
+variable "enable" {
+  type        = bool
+  description = "Enable this module"
+  default     = true
 }
 
 locals {
@@ -33,11 +39,12 @@ locals {
 }
 
 data "aws_ssm_parameter" "parameter" {
+  count           = var.enable ? 1 : 0
   name            = "${local.prefix}${var.parameter}"
   with_decryption = false
 }
 
 output "arn" {
   description = "SSM parameter ARN"
-  value       = data.aws_ssm_parameter.parameter.arn
+  value       = var.enable ? data.aws_ssm_parameter.parameter[0].arn : ""
 }

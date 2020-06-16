@@ -42,6 +42,60 @@ func TestFetchParameterStoreArn_basic(t *testing.T) {
 	t.Logf("Terraform module inputs: %+v", *terraformOptions)
 }
 
+func TestFetchParameterStoreArn_customPrefix(t *testing.T) {
+	t.Parallel()
+
+	customPrefixName := strings.ToUpper(fmt.Sprintf("PF_%s", random.UniqueId()))
+	secretName := fmt.Sprintf("FOO_%s_", random.UniqueId())
+
+	expectedParameterName := fmt.Sprintf("%s%s", customPrefixName, secretName)
+	secretValue := random.UniqueId()
+
+	SSMPutParameter(t, expectedParameterName, secretValue)
+
+	exampleDir := "../examples/custom_prefix/"
+
+	terraformOptions := &terraform.Options{
+		TerraformDir: exampleDir,
+		Vars: map[string]interface{}{
+			"secret_name": secretName,
+			"prefix":      customPrefixName,
+		},
+	}
+	defer terraform.Destroy(t, terraformOptions)
+
+	TerraformApplyAndValidateOutputs(t, terraformOptions, expectedParameterName)
+
+	t.Logf("Terraform module inputs: %+v", *terraformOptions)
+}
+
+func TestFetchParameterStoreArn_disable(t *testing.T) {
+	t.Parallel()
+
+	customPrefixName := strings.ToUpper(fmt.Sprintf("PF_%s", random.UniqueId()))
+	secretName := fmt.Sprintf("FOO_%s_", random.UniqueId())
+
+	expectedParameterName := fmt.Sprintf("%s%s", customPrefixName, secretName)
+	secretValue := random.UniqueId()
+
+	SSMPutParameter(t, expectedParameterName, secretValue)
+
+	exampleDir := "../examples/disable/"
+
+	terraformOptions := &terraform.Options{
+		TerraformDir: exampleDir,
+		Vars: map[string]interface{}{
+			"secret_name": secretName,
+			"prefix":      customPrefixName,
+		},
+	}
+	defer terraform.Destroy(t, terraformOptions)
+
+	TerraformApplyAndValidateOutputs(t, terraformOptions, "")
+
+	t.Logf("Terraform module inputs: %+v", *terraformOptions)
+}
+
 func SSMPutParameter(t *testing.T, secretName string, secretValue string) *ssm.PutParameterOutput {
 	sess := session.Must(session.NewSession(&aws.Config{
 		Credentials:      credentials.NewStaticCredentials("id", "secret", "token"),
@@ -77,5 +131,9 @@ func TerraformApplyAndValidateOutputs(t *testing.T, terraformOptions *terraform.
 	require.Equal(t, resourceCount.Change, 0)
 	require.Equal(t, resourceCount.Destroy, 0)
 
-	require.Regexp(t, terraform.Output(t, terraformOptions, "arn"), fmt.Sprintf("arn:aws:ssm:us-east-1::parameter/%s", expectedParameterName))
+	if expectedParameterName == "" {
+		require.Equal(t, "", terraform.Output(t, terraformOptions, "arn"))
+	} else {
+		require.Regexp(t, fmt.Sprintf("arn:aws:ssm:us-east-1::parameter/%s", expectedParameterName), terraform.Output(t, terraformOptions, "arn"))
+	}
 }

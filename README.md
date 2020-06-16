@@ -5,7 +5,7 @@
 This module fetches the arn of the secret in AWS SSM parameter store.
 
 ## Usage  
-Checkout [test.tf](./tests/test.tf) for how to use this module
+Checkout [examples](./examples) for how to use this module
 
 ## Authors
 
@@ -32,7 +32,9 @@ MIT Licensed. See [LICENSE](LICENSE) for full details.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| parameter | parameter for which the ARN needs to be fetched | `string` | n/a | yes |
+| parameter | SSM parameter for which the ARN needs to be fetched | `string` | n/a | yes |
+| enable | Enable this module | `bool` | `true` | no |
+| prefix | SSM parameter prefix | `string` | `null` | no |
 
 ## Outputs
 

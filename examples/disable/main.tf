@@ -3,6 +3,11 @@ variable "secret_name" {
   description = "Secret's ARN to fetch"
 }
 
+variable "prefix" {
+  type        = string
+  description = "Custom secretprefix"
+}
+
 provider "aws" {
   s3_force_path_style         = true
   skip_credentials_validation = true
@@ -21,6 +26,8 @@ provider "aws" {
 module "fetch_secret_arn" {
   source = "../../"
 
+  enable    = false
+  prefix    = var.prefix
   parameter = var.secret_name
 }
 

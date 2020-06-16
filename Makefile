@@ -32,11 +32,12 @@ develop:
 
 generate-docs: fmt lint
 	@$(shell $(GENERATE_DOCS_COMMAND))
-	@find triggers -maxdepth 1 -type d -not -path 'triggers' -exec sh -c 'cd {} && $(GENERATE_DOCS_COMMAND)' ';'
+
 
 clean-state:
 	@find . -type f -name 'terraform.tfstate*' | xargs rm -rf
 	@find . -type d -name '.terraform' | xargs rm -rf
+	@find . -type d -name 'terraform.tfstate.d' | xargs rm -rf
 
 clean-all: clean-state
 	@$(DOCKER_COMPOSE) down -v
