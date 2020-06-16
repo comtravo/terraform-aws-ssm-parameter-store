@@ -1,5 +1,5 @@
 /**
-* # Terraform AWS module for AWS SSM parameter store data module
+* # Terraform AWS module for AWS SSM parameter
 *
 * ## Introduction
 *
