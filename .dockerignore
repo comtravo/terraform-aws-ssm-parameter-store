@@ -11,3 +11,8 @@ docker-compose*
 
 # .tfvars files
 **/*.tfvars
+
+Jenkinsfile
+
+examples/**/localstack.tf
+examples/**/foo.zip
