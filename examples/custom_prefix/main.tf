@@ -17,9 +17,9 @@ provider "aws" {
   secret_key                  = "This is not an actual secret key."
 
   endpoints {
-    iam = "http://localstack:4593"
-    ssm = "http://localstack:4583"
-    sts = "http://localstack:4592"
+    iam = "http://localstack:4566"
+    ssm = "http://localstack:4566"
+    sts = "http://localstack:4566"
   }
 }
 
