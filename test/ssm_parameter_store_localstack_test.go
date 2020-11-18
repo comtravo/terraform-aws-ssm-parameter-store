@@ -101,7 +101,7 @@ func SSMPutParameter(t *testing.T, secretName string, secretValue string) *ssm.P
 		Credentials:      credentials.NewStaticCredentials("id", "secret", "token"),
 		S3ForcePathStyle: aws.Bool(true),
 		Region:           aws.String("us-east-1"),
-		Endpoint:         aws.String("http://localstack:4566"),
+		Endpoint:         aws.String("http://localstack:4583"),
 	}))
 
 	ssmClient := ssm.New(sess, &aws.Config{})
