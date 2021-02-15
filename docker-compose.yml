@@ -16,7 +16,7 @@ services:
       - start_dependencies
 
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:0.11.4
     ports:
       - 4566:4566
       - 4584-4597:4584-4597
