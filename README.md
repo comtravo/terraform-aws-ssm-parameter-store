@@ -32,8 +32,8 @@ MIT Licensed. See [LICENSE](LICENSE) for full details.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| parameter | SSM parameter for which the ARN needs to be fetched | `string` | n/a | yes |
 | enable | Enable this module | `bool` | `true` | no |
+| parameter | SSM parameter for which the ARN needs to be fetched | `string` | n/a | yes |
 | prefix | SSM parameter prefix | `string` | `null` | no |
 
 ## Outputs
@@ -41,4 +41,3 @@ MIT Licensed. See [LICENSE](LICENSE) for full details.
 | Name | Description |
 |------|-------------|
 | arn | SSM parameter ARN |
-
