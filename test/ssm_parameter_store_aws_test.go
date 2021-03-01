@@ -2,11 +2,11 @@ package test
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/gruntwork-io/terratest/modules/random"
@@ -98,10 +98,7 @@ func TestFetchParameterStoreArn_disable(t *testing.T) {
 
 func SSMPutParameter(t *testing.T, secretName string, secretValue string) *ssm.PutParameterOutput {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Credentials:      credentials.NewStaticCredentials("id", "secret", "token"),
-		S3ForcePathStyle: aws.Bool(true),
-		Region:           aws.String("us-east-1"),
-		Endpoint:         aws.String("http://localstack:4583"),
+		Region: aws.String("us-east-1"),
 	}))
 
 	ssmClient := ssm.New(sess, &aws.Config{})
@@ -134,6 +131,8 @@ func TerraformApplyAndValidateOutputs(t *testing.T, terraformOptions *terraform.
 	if expectedParameterName == "" {
 		require.Equal(t, "", terraform.Output(t, terraformOptions, "arn"))
 	} else {
-		require.Regexp(t, fmt.Sprintf("arn:aws:ssm:us-east-1::parameter/%s", expectedParameterName), terraform.Output(t, terraformOptions, "arn"))
+		require.Regexp(t,
+			regexp.MustCompile(fmt.Sprintf("arn:aws:ssm:us-east-1:\\d{12}:parameter/%s", expectedParameterName)),
+			terraform.Output(t, terraformOptions, "arn"))
 	}
 }
