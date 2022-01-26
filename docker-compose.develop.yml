@@ -1,9 +1,0 @@
-version: '3.7'
-
-services:
-  terraform:
-    command: bash
-    environment:
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-foo}
-    volumes:
-      - ./:/go/src/github.com/comtravo/terraform-aws-ssm-parameter-store
